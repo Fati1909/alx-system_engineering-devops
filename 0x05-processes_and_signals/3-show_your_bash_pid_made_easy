@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Displays "To infinity and beyond" indefinitely,
-# with a "sleep 2" in between each iteration.
+# Bash script that displays the PID, along with the process name
 
 while true
 do
