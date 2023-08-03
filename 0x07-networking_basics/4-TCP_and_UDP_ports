@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#Bash script that displays listening ports
+
+listening_sockets=$(netstat -lnpt | grep "LISTEN")
+
+echo "PID   Port   Program Name"
+
+while read -r line; do
+    pid=$(echo "$line" | awk '{print $7}' | cut -d/ -f1)
+    port=$(echo "$line" | awk '{print $4}' | awk -F':' '{print $NF}')
+    program=$(echo "$line" | awk '{print $NF}')
+
+    echo "$pid   $port   $program"
+done <<< "$listening_sockets"
+
