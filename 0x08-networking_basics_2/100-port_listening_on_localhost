@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Bash script that listens on port 98 on localhost
+
+PIPE=/tmp/my_named_pipe
+mkfifo $PIPE
+
+nc -l 127.0.0.1 98 0<$PIPE | while read line; do
+    echo "Received: $line"
+done
+
+rm $PIPE
+
