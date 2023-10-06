@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 #Bash script that will display information about subdomains
 
-call_dig() {
-	 dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tail -n 1 | awk '{print "The subdomain " subdomain " is a " $4 " record and points to " $5}' subdomain="$2"
+print_info() {
+    local full_subdomain="$1"
+    local sub="$2"
+
+    dig "$full_subdomain" | awk -v subdomain="$sub" -F" " '/ANSWER SECTION:/ { getline; print "The subdomain " subdomain " is a " $4 " record and points to " $5 }'
 }
 
-if [ "$#" == 1 ]; 
-then
-    call_dig "$1" "www"
-    call_dig "$1" "lb-01"
-    call_dig "$1" "web-01"
-    call_dig "$1" "web-02"
-elif [ "$#" == 2 ]; 
-then
-    call_dig "$1" "$2"
+# Check for correct number of arguments
+if [ "$#" -eq 2 ]; then
+    print_info "$2.$1" "$2"
+else
+    for sub in www lb-01 web-01 web-02; do
+        print_info "${sub}.$1" "$sub"
+    done
 fi
